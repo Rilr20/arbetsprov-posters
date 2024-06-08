@@ -5,9 +5,7 @@ $username = $_POST['username'];
 
 
 $pdo = new PDO('mysql:host=localhost;dbname=posters', "root", "");
-$sql = <<<EOD
-    SELECT 
-    EOD;
+
 $stmt = $pdo->prepare('SELECT username, password, is_admin FROM users where username = ?');
 $params = [$username];
 $stmt->execute($params);
@@ -40,6 +38,9 @@ try {
         // } else {
         //     header('Location: index');
         // }
+    } else {
+        header("Location: index.php");
+
     }
 } catch (\Throwable $th) {
     //throw $th;
