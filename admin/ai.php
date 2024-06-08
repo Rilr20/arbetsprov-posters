@@ -1,4 +1,4 @@
 <?php
 
 ?>
-<h1>This is Admiun</h1>
+<h1>This is Ai Page Where you get Image Text</h1>

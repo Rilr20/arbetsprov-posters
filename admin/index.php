@@ -4,14 +4,14 @@
 // search for image
 
 $data = [];
-function ImageSearch($searchString): mixed
+function ImageSearch($searchString, $perpage=4): mixed
 {
-
+    
     $curl = curl_init();
     // $header = array();
     // $search = "nature";
     // $header[] = 'Authorization: xxjCiUcIHYdK5dqtEeqbJpf3b2dUmGrZLoi0ai4ueO9Nfkeoggmn6uB1';
-    curl_setopt($curl, CURLOPT_URL, "https://api.pexels.com/v1/search?query=" . urlencode($searchString) . "&per_page=4");
+    curl_setopt($curl, CURLOPT_URL, "https://api.pexels.com/v1/search?query=" . urlencode($searchString) . "&per_page=$perpage");
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_HTTPGET, true);
     curl_setopt($curl, CURLOPT_HTTPHEADER, array(
@@ -21,6 +21,27 @@ function ImageSearch($searchString): mixed
     curl_close($curl);
     // print_r($result);
     $data = json_decode($result);
+    // var_dump($data);
+
+    $params = [];
+    //sort for original url
+    foreach ($data->photos as $photo) {
+        # code...
+        array_push($params, $photo->src->original);
+    }
+    // var_dump($params);
+
+    $pdo = new PDO('mysql:host=localhost;dbname=posters', "root", "");
+    $in = str_repeat("?,", count($params) - 1) . "?";
+    // $in = implode(',', array_fill(0, $perpage, '?'));
+    
+    // var_dump("SELECT imageurl FROM search WHERE imageurl in ($in) AND reviewed=0");
+    var_dump($params);
+    $stmt = $pdo->prepare("SELECT imageurl FROM search WHERE imageurl in ($in) AND reviewed=0");
+    $stmt->execute($params);
+    $stmtres = $stmt->fetchAll();
+    var_dump($stmtres);
+
     return $data;
 }
 // var_dump($data->photos[0]);
@@ -43,7 +64,7 @@ if (array_key_exists('search', $_POST)) {
     <input type="text" name="searchstring" id="searchstring">
     <button type="submit" name="search" value="">Search</button>
 </form>
-<form action="?process" method="POST">
+<form action="?page=process" method="POST">
     <?php if (is_object($data)) { ?>
         <?php foreach ($data->photos as $key => $value) :  ?>
 
