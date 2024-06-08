@@ -4,7 +4,7 @@ $password = md5($_POST['password']);
 $username = $_POST['username'];
 
 
-$pdo = new PDO('mysql:host=localhost;dbname=posters', "root", "");
+$pdo = new PDO($_ENV['my_sql_dsn'], $_ENV['my_sql_username'], $_ENV['my_sql_password']);
 
 $stmt = $pdo->prepare('SELECT username, password, is_admin FROM users where username = ?');
 $params = [$username];

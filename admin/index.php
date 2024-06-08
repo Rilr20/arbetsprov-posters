@@ -28,7 +28,7 @@ function ImageSearch($searchString, $perpage = 4): mixed
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_HTTPGET, true);
     curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-        "Authorization: " . PEXELSKEY
+        "Authorization: " . $_ENV['API_pexels']
     ));
     $result = curl_exec($curl);
     curl_close($curl);
