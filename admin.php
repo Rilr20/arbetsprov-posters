@@ -1,30 +1,23 @@
 <?php
-if (true) {
-}
+// include "./config.php";
 
-// search for image
-$curl = curl_init();
-$header = array();
-$search = "nature";
-// $header[] = 'Authorization: xxjCiUcIHYdK5dqtEeqbJpf3b2dUmGrZLoi0ai4ueO9Nfkeoggmn6uB1';
-curl_setopt($curl, CURLOPT_URL, "https://api.pexels.com/v1/search?query=" . urlencode($search) . "&per_page=4");
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_HTTPGET, true);
-curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-    "Authorization: xxjCiUcIHYdK5dqtEeqbJpf3b2dUmGrZLoi0ai4ueO9Nfkeoggmn6uB1"
-));
-$result = curl_exec($curl);
-curl_close($curl);
-// print_r($result);
-$data = json_decode($result);
-var_dump($data->photos[0]);
-// echo "<br>";
-var_dump("");
-var_dump($data->photos);
+$pageReference = $_GET['page'] ?? "index";
 
-// var_dump($result);
+$base = basename(__FILE__, ".php");
+$pages = [
+    "index" => [
+        "file" => __DIR__ . "/$base/index.php",
+    ],
+    "processing" => [
+        "file" => __DIR__ . "/$base/processing.php",
+    ],
+    "ai" => [
+        "file"=> __DIR__ . "/$base/ai.php",
+    ],
+];
 
-// "Authorization: xxjCiUcIHYdK5dqtEeqbJpf3b2dUmGrZLoi0ai4ueO9Nfkeoggmn6uB1" \"https://api.pexels.com/v1/search?query=nature&per_page=1"
-
+$page =  $pages[$pageReference] ?? null;
+require __DIR__ . "/config.php";
+require __DIR__ . "/multipage/multipage.php";
 ?>
-<h1>Admin Page</h1>
+<!-- <h1>twat</h1> -->
