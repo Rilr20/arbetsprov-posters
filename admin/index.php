@@ -30,18 +30,19 @@ function ImageSearch($searchString, $perpage=4): mixed
         array_push($params, $photo->src->original);
     }
     // var_dump($params);
-
-    $pdo = new PDO('mysql:host=localhost;dbname=posters', "root", "");
-    $in = str_repeat("?,", count($params) - 1) . "?";
-    // $in = implode(',', array_fill(0, $perpage, '?'));
     
-    // var_dump("SELECT imageurl FROM search WHERE imageurl in ($in) AND reviewed=0");
-    var_dump($params);
-    $stmt = $pdo->prepare("SELECT imageurl FROM search WHERE imageurl in ($in) AND reviewed=0");
-    $stmt->execute($params);
-    $stmtres = $stmt->fetchAll();
-    var_dump($stmtres);
-
+    if (count($params) != 0){
+        $pdo = new PDO('mysql:host=localhost;dbname=posters', "root", "");
+        $in = str_repeat("?,", count($params) - 1) . "?";
+        // $in = implode(',', array_fill(0, $perpage, '?'));
+        
+        // var_dump("SELECT imageurl FROM search WHERE imageurl in ($in) AND reviewed=0");
+        var_dump($params);
+        $stmt = $pdo->prepare("SELECT imageurl FROM search WHERE imageurl in ($in) AND reviewed=0");
+        $stmt->execute($params);
+        $stmtres = $stmt->fetchAll();
+    }
+    
     return $data;
 }
 // var_dump($data->photos[0]);
