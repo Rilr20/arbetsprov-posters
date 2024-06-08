@@ -3,8 +3,10 @@
 
 // search for image
 
-function ImageSearch($searchString): mixed  {
-    
+$data;
+function ImageSearch($searchString): mixed
+{
+
     $curl = curl_init();
     // $header = array();
     // $search = "nature";
@@ -29,23 +31,33 @@ function ImageSearch($searchString): mixed  {
 // var_dump($result);
 
 // "Authorization: xxjCiUcIHYdK5dqtEeqbJpf3b2dUmGrZLoi0ai4ueO9Nfkeoggmn6uB1" \"https://api.pexels.com/v1/search?query=nature&per_page=1"
-
+if (array_key_exists('search', $_POST)) {
+    // var_dump($_POST);
+    $search = $_POST["searchstring"];
+    $data = ImageSearch($search);
+    // var_dump($data);
+}
 ?>
 <h1>Admin Page</h1>
+<form method="post">
+    <input type="text" name="searchstring" id="searchstring">
+    <button type="submit" name="search" value="">Search</button>
+</form>
 <form action="?process" method="POST">
-    <?php foreach ($data->photos as $key => $value) :  ?>
+    <?php if (is_object($data)) { ?>
+        <?php foreach ($data->photos as $key => $value) :  ?>
 
-        <div>
-            <img src=<?= $value->src->tiny ?> alt=<?= $search ?>></img>
-            <?= $key ?>
-            <?= $value->id; ?> tja
-        </div>
-        <input id="yes-<?= $key ?>" type="radio" name="selection[<?= $key ?>]" value="1" required>
-        <label for="yes-<?= $key ?>">yes</label>
-        <input id="no-<?= $key ?>" type="radio" name="selection[<?= $key ?>]" value="0" required>
-        <label for="no-<?= $key ?>">no</label>
-        <input type="hidden" name="url[<?= $key ?>]" value="<?= $value->src->original ?>">
+            <div>
+                <img src=<?= $value->src->tiny ?> alt=<?= $search ?>></img>
+            </div>
+            <input id="yes-<?= $key ?>" type="radio" name="selection[<?= $key ?>]" value="1" required>
+            <label for="yes-<?= $key ?>">yes</label>
+            <input id="no-<?= $key ?>" type="radio" name="selection[<?= $key ?>]" value="0" required>
+            <label for="no-<?= $key ?>">no</label>
+            <input type="hidden" name="url[<?= $key ?>]" value="<?= $value->src->original ?>">
         <?php endforeach; ?>
-        <input type="hidden" name="process" value="photos">
+    <?php } ?>
+    <input type="hidden" name="process" value="photos">
     <button>submit</button>
+
 </form>
