@@ -4,9 +4,13 @@
 // search for image
 
 $data = [];
-function ImageSearch($searchString, $perpage=4): mixed
+function ImageSearch($searchString, $perpage = 4): mixed
 {
-    
+    unset($_SESSION["searchinfo"]);
+    if ($searchString == "") {
+        $_SESSION["searchinfo"] = "Missing search string";
+        return [];
+    }
     $curl = curl_init();
     // $header = array();
     // $search = "nature";
@@ -30,19 +34,34 @@ function ImageSearch($searchString, $perpage=4): mixed
         array_push($params, $photo->src->original);
     }
     // var_dump($params);
-    
-    if (count($params) != 0){
+
+    if (count($params) != 0) {
         $pdo = new PDO('mysql:host=localhost;dbname=posters', "root", "");
         $in = str_repeat("?,", count($params) - 1) . "?";
         // $in = implode(',', array_fill(0, $perpage, '?'));
-        
+
         // var_dump("SELECT imageurl FROM search WHERE imageurl in ($in) AND reviewed=0");
-        var_dump($params);
-        $stmt = $pdo->prepare("SELECT imageurl FROM search WHERE imageurl in ($in) AND reviewed=0");
+        // var_dump($params);
+        $stmt = $pdo->prepare("SELECT imageurl FROM search WHERE imageurl in ($in)");
         $stmt->execute($params);
         $stmtres = $stmt->fetchAll();
+
+        // Remove them from $data variable.
+        foreach ($stmtres as $url) {
+            foreach ($data->photos as $key => $datavalue) {
+                if ($datavalue->src->original == $url["imageurl"]) {
+                    unset($data->photos[$key]);
+                    break;
+                }
+            }
+        }
+
+        // var_dump($stmtres);
     }
-    
+    // var_dump($data);
+    if (count($data->photos) == 0) {
+        $_SESSION["searchinfo"] = "No new images found";
+    }
     return $data;
 }
 // var_dump($data->photos[0]);
@@ -66,6 +85,7 @@ if (array_key_exists('search', $_POST)) {
     <button type="submit" name="search" value="">Search</button>
 </form>
 <form action="?page=process" method="POST">
+    <p <?php (isset($_SESSION["searchinfo"])) ? "hidden" : ""  ?>><?= (isset($_SESSION["searchinfo"])) ? $_SESSION["searchinfo"]  : ""?></p>
     <?php if (is_object($data)) { ?>
         <?php foreach ($data->photos as $key => $value) :  ?>
 
