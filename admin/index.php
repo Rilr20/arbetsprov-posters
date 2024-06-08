@@ -3,7 +3,7 @@
 
 // search for image
 
-$data;
+$data = [];
 function ImageSearch($searchString): mixed
 {
 
