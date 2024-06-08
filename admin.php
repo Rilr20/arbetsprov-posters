@@ -8,8 +8,8 @@ $pages = [
     "index" => [
         "file" => __DIR__ . "/$base/index.php",
     ],
-    "processing" => [
-        "file" => __DIR__ . "/$base/processing.php",
+    "process" => [
+        "file" => __DIR__ . "/$base/process.php",
     ],
     "ai" => [
         "file"=> __DIR__ . "/$base/ai.php",
