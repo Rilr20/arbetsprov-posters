@@ -5,6 +5,14 @@ use Gemini\Enums\MimeType;
 
 $array = $_SESSION['ai'];
 // var_dump($array);
+class Result
+{
+    // Implement the text() method to return "Hello World"
+    public function text()
+    {
+        return '{"title": "Title for Image", "header": "Image", "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam repellat fugiat commodi magnam similique atque molestias fugit nemo necessitatibus officiis nisi placeat eius ducimus, hic eaque velit, deleniti suscipit voluptas.", "keywords": ["image", "generated", "cool"]}';
+    }
+}
 function generateData($url)
 {
     $yourApiKey = $_ENV["API_gemini"];
@@ -12,15 +20,16 @@ function generateData($url)
     $url = "$url?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280";
     $binaryData = new Blob(MimeType::IMAGE_JPEG, base64_encode(file_get_contents(($url))));
 
-    $result = $client->geminiProVision()->generateContent(['based on the image fill in this structure {    "title":"",    "header":"",    "description":"",    "keywords": [],}', $binaryData]);
-    $result->text();
+    // $result = $client->geminiProVision()->generateContent(['based on the image fill in this structure {    "title":"",    "header":"",    "description":"",    "keywords": [],}', $binaryData]);
+    // $result->text();
 
     // What it would look like
-    $result = '{"title": "Title for Image", "header": "Image", "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam repellat fugiat commodi magnam similique atque molestias fugit nemo necessitatibus officiis nisi placeat eius ducimus, hic eaque velit, deleniti suscipit voluptas.", "keywords": ["image", "generated", "cool"]}';
+    $result = new Result();
+
     try {
         //code...
         // 2/0;
-        $data = json_decode($result);
+        $data = json_decode($result->text());
         // var_dump($data->keys);
         if (!isset($data->url)) {
             $data->url = $url;
