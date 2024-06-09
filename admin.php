@@ -1,5 +1,4 @@
 <?php
-// include "./config.php";
 
 $pageReference = $_GET['page'] ?? "index";
 

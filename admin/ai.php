@@ -4,9 +4,10 @@ $array = $_SESSION['ai'];
 // var_dump($array);
 function generateData($url)
 {
-    $yourApiKey = "AIzaSyBCc4q6u68-N1_Rl9JrS_pfOnRn4WaA-Bs";
+    $yourApiKey = $_ENV["API_gemini"];
+    var_dump($yourApiKey);
     $client = Gemini::client($yourApiKey);
-    // $url = "https://images.pexels.com/photos/593467/pexels-photo-593467.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280";
+    // $url = "$url?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280";
     $binaryData = base64_encode(file_get_contents($url));
 
     // $result = $client->geminiPro()->generateContent(['based on the image fill in this structure {    "title":"",    "header":"",    "description":"",    "keywords": [],}', $binaryData]);
@@ -57,6 +58,7 @@ foreach ($_SESSION['ai'] as $value) {
 <h1>This is Ai Page Where you get Image Text</h1>
 <?php foreach ($data as $key => $value) :  ?>
     <div>
+        <?=$key?>
         <img src="<?= $value->url ?>?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280" alt="<?= $value->header ?>">
         <label for="title">Title</label>
         <input type="text" name="title" value="<?= $value->title ?>">
