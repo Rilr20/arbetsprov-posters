@@ -1,17 +1,19 @@
 <?php
 
+use Gemini\Data\Blob;
+use Gemini\Enums\MimeType;
+
 $array = $_SESSION['ai'];
 // var_dump($array);
 function generateData($url)
 {
     $yourApiKey = $_ENV["API_gemini"];
-    var_dump($yourApiKey);
     $client = Gemini::client($yourApiKey);
-    // $url = "$url?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280";
-    $binaryData = base64_encode(file_get_contents($url));
+    $url = "$url?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280";
+    $binaryData = new Blob(MimeType::IMAGE_JPEG, base64_encode(file_get_contents(($url))));
 
-    // $result = $client->geminiPro()->generateContent(['based on the image fill in this structure {    "title":"",    "header":"",    "description":"",    "keywords": [],}', $binaryData]);
-    // $result->text();
+    $result = $client->geminiProVision()->generateContent(['based on the image fill in this structure {    "title":"",    "header":"",    "description":"",    "keywords": [],}', $binaryData]);
+    $result->text();
 
     // What it would look like
     $result = '{"title": "Title for Image", "header": "Image", "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam repellat fugiat commodi magnam similique atque molestias fugit nemo necessitatibus officiis nisi placeat eius ducimus, hic eaque velit, deleniti suscipit voluptas.", "keywords": ["image", "generated", "cool"]}';
@@ -56,17 +58,21 @@ foreach ($_SESSION['ai'] as $value) {
 ?>
 
 <h1>This is Ai Page Where you get Image Text</h1>
-<?php foreach ($data as $key => $value) :  ?>
-    <div>
-        <?=$key?>
-        <img src="<?= $value->url ?>?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280" alt="<?= $value->header ?>">
-        <label for="title">Title</label>
-        <input type="text" name="title" value="<?= $value->title ?>">
-        <label for="header">Header</label>
-        <input type="text" name="header" value="<?= $value->header ?>">
-        <label for="description">Description</label>
-        <textarea name="description" id="description" value=""><?= $value->description ?></textarea>
-        <label for="keywords">Keywords, comma separated</label>
-        <input type="text" name="keywords" value="<?= implode(', ', $value->keywords) ?>">
-    </div>
-<?php endforeach; ?>
+<form action="?page=process" method="POST">
+    <?php foreach ($data as $key => $value) :  ?>
+        <div>
+            <?= $key ?>
+            <img src="<?= $value->url ?>?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280" alt="<?= $value->header ?>">
+            <label for="title">Title</label>
+            <input type="text" name="title" value="<?= $value->title ?>">
+            <label for="header">Header</label>
+            <input type="text" name="header" value="<?= $value->header ?>">
+            <label for="description">Description</label>
+            <textarea name="description" id="description" value=""><?= $value->description ?></textarea>
+            <label for="keywords">Keywords, comma separated</label>
+            <input type="text" name="keywords" value="<?= implode(', ', $value->keywords) ?>">
+        </div>
+    <?php endforeach; ?>
+    <input type="hidden" name="process" value="generation">
+    <button type="submit">Validated</button>
+</form>
