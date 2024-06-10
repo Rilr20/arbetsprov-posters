@@ -83,6 +83,7 @@ if (array_key_exists('random', $_POST)) {
 }
 ?>
 <h1>Admin Page</h1>
+<p><a href="index.php">Index</a> Go Back to Index</p>
 <form method="post">
     <input type="text" name="searchstring" id="searchstring">
     <button type="submit" name="search" value="">Search</button>
