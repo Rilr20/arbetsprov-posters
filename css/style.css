@@ -83,3 +83,64 @@
     background: #fff;
     color: #d90429
 }
+html {
+    background-color: #eee7e7;
+}
+main {
+    margin: auto;
+    width: 80%;
+    padding-left: 5em;
+    padding-right: 5em;
+    min-height: 100vh;
+}
+.wrapper-size {
+    width: 300px;
+    margin: auto;
+}
+.form-flex {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-flex div {
+    display: flex;
+    justify-content: space-around;
+}
+
+.form-flex div label {
+    width: 64px;
+}
+.title {
+    text-align: center;
+}
+
+
+.posters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1em;
+}
+.poster {
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 450px;
+    height: 650px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 0.5fr 2fr;
+    grid-template-rows: 1fr 1fr 1fr 0.5fr 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    background-color: oldlace;
+}
+
+.poster-title { grid-area: 1 / 1 / 2 / 6;text-align: center;}
+.poster-keyword { grid-area: 2 / 5 / 5 / 6; overflow-y: auto;max-height: 290px;}
+.poster-img { grid-area: 2 / 1 / 4 / 5;}
+.poster-header { grid-area: 4 / 1 / 5 / 5;text-align: center;}
+.poster-description { grid-area: 5 / 1 / 6 / 6;padding: 0 0.5em 0 0.5em} 
+
+.poster-keyword-text {
+    padding: 0;
+    margin: 0;
+}
