@@ -13,11 +13,11 @@ class Result
 }
 function generateData($url)
 {
-    $yourApiKey = $_ENV["API_openai"];#Todo: change variable
-    
+    $yourApiKey = $_ENV["API_openai"];
+
     $client = OpenAi::client($yourApiKey);
     $url = "$url?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280";
-    // echo '<pre>', var_dump($client->chat()), '</pre>';
+    // :
 
     $result = $client->chat()->create([
         'model' => 'gpt-4-vision-preview',
@@ -33,21 +33,22 @@ function generateData($url)
         'max_tokens' => 900,
     ]);
 
-    // return $result->choices[0]->message->content;
-    // $binaryData = new Blob(MimeType::IMAGE_JPEG, base64_encode(file_get_contents(($url))));
-
-    // $result = $client->geminiProVision()->generateContent(['based on the image fill in this structure {    "title":"",    "header":"",    "description":"",    "keywords": [],}', $binaryData]);
-    // $result->text();
-
     $data = $result->choices[0]->message->content;
-    //example
-    //```json { "title":"Monkey Looking at Reflection", "header":"A Curious Monkey with a Mirror", "description":"This photo captures a moment where a monkey is looking at its own reflection in a handheld mirror. The monkey appears to be intently examining itself, providing a sense of curiosity and self-awareness that is often attributed to primates.", "keywords": ["monkey", "reflection", "mirror", "self-awareness", "curiosity", "animal behavior", "primate", "nature"] } ```
+
+    // echo "<pre>",var_dump($data),"</pre>";
+
+    $firstExplode = explode('```json', $data);
+    if (count($firstExplode) == 2) {
+        $result = explode('```', $firstExplode[1])[0];
+    } else {
+        echo "else";
+        $result = $data;
+    }
+
 
     try {
-        //code...
-        // 2/0;
-        $data = json_decode($result->text());
-        // var_dump($data->keys);
+        $data = json_decode($result, false);
+        var_dump($data);
         if (!isset($data->url)) {
             $data->url = $url;
         }
@@ -64,15 +65,16 @@ function generateData($url)
             $data->keywords = ["keyword"];
         }
     } catch (\Throwable $th) {
-        //throw $th;
+        throw $th;
         $skeletonObject = new stdClass();
-        $skeletonObject->title = '';
-        $skeletonObject->header = '';
-        $skeletonObject->description = '';
-        $skeletonObject->keywords = [];
+        $skeletonObject->title = 'Title';
+        $skeletonObject->header = 'Header';
+        $skeletonObject->description = 'Description';
+        $skeletonObject->keywords = ['keyword'];
+        $skeletonObject->url = $url;
         $data = $skeletonObject;
     }
-    // var_dump($data);
+    // echo "<pre>", var_dump($data), "</pre>";
     return $data;
 }
 $data = [];
@@ -95,28 +97,31 @@ foreach ($_SESSION['ai'] as $value) {
                 <div class="div2 input-flex">
 
                     <label for="title">Title</label>
-                    <input type="text" name="title" value="<?= $value->title ?>">
+                    <input type="text" name="title[<?= $key ?>]" value="<?= $value->title ?>">
                 </div>
                 <div class="div3 input-flex">
 
                     <label for="header">Header</label>
-                    <input type="text" name="header" value="<?= $value->header ?>">
+                    <input type="text" name="header[<?= $key ?>]" value="<?= $value->header ?>">
                 </div>
                 <div class="div4 input-flex">
 
                     <label for="description">Description</label>
-                    <textarea name="description" id="description" value=""><?= $value->description ?></textarea>
+                    <textarea name="description" id="description[<?= $key ?>]" value=""><?= $value->description ?></textarea>
                 </div>
                 <div class="div5 input-flex">
 
                     <label for="keywords">Keywords*</label>
-                    <input type="text" name="keywords" value="<?= implode(', ', $value->keywords) ?>">
+                    <input type="text" name="keywords[<?= $key ?>]" value="<?= implode(', ', $value->keywords) ?>">
                     <p>*Comma separated</p>
                 </div>
-                <input type="hidden" name="url[<?= $key ?>]" value="<?= $_SESSION['ai'][$key] ?>">
+                <input type="hidden" name="url[<?= $key ?>]" value="<?= $_SESSION['ai'][$key] ?? "none" ?>">
             </div>
         <?php endforeach; ?>
     </div>
     <input type="hidden" name="process" value="generation">
-    <button type="submit">Validated</button>
+    <div class="input-flex button">
+        <button type="submit">Validated</button>
+
+    </div>
 </form>
