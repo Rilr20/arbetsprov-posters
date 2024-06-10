@@ -1,8 +1,8 @@
 <?php
+include './config.php';
 
 $password = md5($_POST['password']);
 $username = $_POST['username'];
-
 
 $pdo = new PDO($_ENV['mysql_dsn'], $_ENV['mysql_username'], $_ENV['mysql_password']);
 
