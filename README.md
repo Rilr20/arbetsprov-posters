@@ -1,5 +1,12 @@
 # arbetsprov-posters
 
+## Installation
+
+```sh
+composer install
+import poster.sql to mysql
+```
+
 ## Tid
     - Databas setup and design                  ~1h
     - Admin Search functionality incl testing   2h
