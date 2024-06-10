@@ -1,7 +1,19 @@
 # arbetsprov-posters
 
-https://ai.google.dev/
+## Tid
+    - Databas setup and design                  ~1h
+    - Admin Search functionality incl testing   2h
+    - Multipage funktionality                   0.5h
+    - Gemini pre-study + installation           1h
+    - Gemini Implementation                     0.75h
+    - Processing Generated Results              0.75h
+    - OpenAi pre-study + installation           0.5h
+    - Add OpenAi api call and testing           0.75h
+    - Processing new Generated Results          1h
+    - Index page and Image page and styling     1h
 
+
+## Instructions
 
 1. Sökfunktion och slumpmässig visning av bilder via Pexels API:
 
