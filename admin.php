@@ -19,4 +19,3 @@ $page =  $pages[$pageReference] ?? null;
 require __DIR__ . "/config.php";
 require __DIR__ . "/multipage/multipage.php";
 ?>
-<!-- <h1>twat</h1> -->

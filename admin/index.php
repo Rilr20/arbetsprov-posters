@@ -20,7 +20,6 @@ function ImageSearch($searchString, $perpage = 4): mixed
         curl_setopt($curl, CURLOPT_URL,  "https://api.pexels.com/v1/curated?per_page=$perpage");
         
     } else {
-        echo "else";
         curl_setopt($curl, CURLOPT_URL,  "https://api.pexels.com/v1/search?query=" . urlencode($searchString) . "&per_page=$perpage");
 
     }
@@ -45,7 +44,7 @@ function ImageSearch($searchString, $perpage = 4): mixed
 
 
     if (count($params) != 0) {
-        $pdo = new PDO('mysql:host=localhost;dbname=posters', "root", "");
+        $pdo = new PDO($_ENV['mysql_dsn'], $_ENV['mysql_username'], $_ENV['mysql_password']);
         $in = str_repeat("?,", count($params) - 1) . "?";
 
         $stmt = $pdo->prepare("SELECT imageurl FROM search WHERE imageurl in ($in)");
@@ -69,7 +68,7 @@ function ImageSearch($searchString, $perpage = 4): mixed
         $_SESSION["searchinfo"] = "No new images found";
     }
     // var_dump($data->photos[0]->src);
-    echo '<pre>', var_dump($data->photos[0]->src), '</pre>';
+    // echo '<pre>', var_dump($data->photos[0]->src), '</pre>';
     return $data;
 }
 

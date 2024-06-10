@@ -41,14 +41,14 @@ function generateData($url)
     if (count($firstExplode) == 2) {
         $result = explode('```', $firstExplode[1])[0];
     } else {
-        echo "else";
+        // echo "else";
         $result = $data;
     }
 
 
     try {
         $data = json_decode($result, false);
-        var_dump($data);
+        // var_dump($data);
         if (!isset($data->url)) {
             $data->url = $url;
         }
