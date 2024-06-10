@@ -32,7 +32,6 @@ try {
     // echo $username == $tmp_username;
     if ($md5_pasword == $tmp_password && $username == $tmp_username) {
         $_SESSION["login"] = true;
-        echo "tja";
         // if ($is_admin == 1) {
         header("Location: admin.php");
         // } else {
