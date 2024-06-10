@@ -1,5 +1,4 @@
 <?php
-// var_dump($_POST['url']);
 switch ($_POST['process']) {
     case 'photos':
         /**
@@ -7,11 +6,10 @@ switch ($_POST['process']) {
          * No 0
          */
         if(empty($_POST['selection'])) {
-            var_dump($_POST['selection']);
             $_SESSION["searchinfo"] = "Nothing to Send";
             header("Location: admin.php");
-
         }
+
         $pdo = new PDO($_ENV['mysql_dsn'], $_ENV['mysql_username'], $_ENV['mysql_password']);
         $stmt_check = $pdo->prepare("SELECT imageurl from search where imageurl = ?");
         $stmt = $pdo->prepare('INSERT INTO search (reviewed, imageurl) VALUES(?, ?)');
@@ -28,16 +26,14 @@ switch ($_POST['process']) {
             if (empty($result)) {
 
                 if ($_POST["selection"][$i] == 1) {
-                    // var_dump($_POST["selection"][$i]);
                     array_push($_SESSION['ai'], $_POST["url"][$i]);
-                    var_dump($_SESSION["ai"]);
                 }
                 $params = [$_POST["selection"][$i], $_POST["url"][$i]];
                 $stmt->execute($params);
                 // echo "<br/>";
-                header("Location: admin.php?page=ai");
             }
         }
+        header("Location: admin.php?page=ai");
 
         break;
     case 'generation':
@@ -45,14 +41,14 @@ switch ($_POST['process']) {
             $title = $_POST['title'][$i];
             $header = $_POST['header'][$i];
             $description = $_POST['description'][$i];
-            // var_dump($_POST['description'][$i]);
+
             $url = $_POST['url'][$i];
             $keywords = explode(",", $_POST['keywords'][$i]);
             $pdo = new PDO($_ENV['mysql_dsn'], $_ENV['mysql_username'], $_ENV['mysql_password']);
             $posterId = CreatePoster($pdo, $header, $title, $description, $url);
             AddKeywords($pdo, $posterId, $keywords);
-            header("Location: admin.php");
         }
+        header("Location: admin.php");
         break;
         // default:
         //     # code...

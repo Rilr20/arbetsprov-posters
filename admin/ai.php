@@ -1,5 +1,5 @@
 <?php
-
+include(dirname(__FILE__) . '/../incl/doctype.php');
 
 $array = $_SESSION['ai'];
 // var_dump($array);

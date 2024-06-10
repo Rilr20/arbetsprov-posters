@@ -3,6 +3,8 @@
 
 // search for image
 
+include(dirname(__FILE__) . '/../incl/doctype.php');
+
 $data = [];
 function ImageSearch($searchString, $perpage = 4): mixed
 {
@@ -12,16 +14,14 @@ function ImageSearch($searchString, $perpage = 4): mixed
         $_SESSION["searchinfo"] = "Missing search string";
         return [];
     }
-    
+
     $curl = curl_init();
 
     if ($searchString == "POST_random") {
 
         curl_setopt($curl, CURLOPT_URL,  "https://api.pexels.com/v1/curated?per_page=$perpage");
-        
     } else {
         curl_setopt($curl, CURLOPT_URL,  "https://api.pexels.com/v1/search?query=" . urlencode($searchString) . "&per_page=$perpage");
-
     }
 
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -60,8 +60,6 @@ function ImageSearch($searchString, $perpage = 4): mixed
                 }
             }
         }
-
-
     }
     // var_dump($data);
     if (count($data->photos) == 0) {
@@ -84,27 +82,45 @@ if (array_key_exists('random', $_POST)) {
 ?>
 <h1>Admin Page</h1>
 <p><a href="index.php">Index</a> Go Back to Index</p>
-<form method="post">
-    <input type="text" name="searchstring" id="searchstring">
-    <button type="submit" name="search" value="">Search</button>
-    <button type="submit" name="random" value="">Random</button>
-</form>
+<div class="search-form">
+    <form method="post">
+        <p>Search for your image</p>
+        <input type="text" name="searchstring" id="searchstring">
+        <div class="button">
+            <button type="submit" name="search" value="">Search</button>
+            <button type="submit" name="random" value="">Random</button>
+        </div>
+    </form>
+</div>
 <form action="?page=process" method="POST">
     <p <?php (isset($_SESSION["searchinfo"])) ? "hidden" : ""  ?>><?= (isset($_SESSION["searchinfo"])) ? $_SESSION["searchinfo"]  : "" ?></p>
     <?php if (is_object($data)) { ?>
-        <?php foreach ($data->photos as $key => $value) :  ?>
+        <div class="images-preview">
 
-            <div>
-                <img src=<?= $value->src->tiny ?> alt=<?= $search ?? "random" ?>></img>
+            <?php foreach ($data->photos as $key => $value) :  ?>
+                <div class="image-preview">
+                <div>
+                    <img src=<?= $value->src->tiny ?> alt=<?= $search ?? "random" ?>></img>
+                </div>
+                <div class="preview-inputs">
+                    <div>
+                        <input id="yes-<?= $key ?>" type="radio" name="selection[<?= $key ?>]" value="1" required>
+                        <label for="yes-<?= $key ?>">yes</label>
+                    </div>
+                    <div>
+                        <input id="no-<?= $key ?>" type="radio" name="selection[<?= $key ?>]" value="0" required>
+                        <label for="no-<?= $key ?>">no</label>
+                    </div>
+                    <input type="hidden" name="url[<?= $key ?>]" value="<?= $value->src->original ?>">
+                </div>
             </div>
-            <input id="yes-<?= $key ?>" type="radio" name="selection[<?= $key ?>]" value="1" required>
-            <label for="yes-<?= $key ?>">yes</label>
-            <input id="no-<?= $key ?>" type="radio" name="selection[<?= $key ?>]" value="0" required>
-            <label for="no-<?= $key ?>">no</label>
-            <input type="hidden" name="url[<?= $key ?>]" value="<?= $value->src->original ?>">
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
     <?php } ?>
     <input type="hidden" name="process" value="photos">
-    <button>submit</button>
+    <div class="center-button button">
+        <button >submit</button>
+
+    </div>
 
 </form>
