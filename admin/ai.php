@@ -107,7 +107,7 @@ foreach ($_SESSION['ai'] as $value) {
                 <div class="div4 input-flex">
 
                     <label for="description">Description</label>
-                    <textarea name="description" id="description[<?= $key ?>]" value=""><?= $value->description ?></textarea>
+                    <textarea name="description[<?= $key ?>]" id="description"><?= $value->description ?></textarea>
                 </div>
                 <div class="div5 input-flex">
 

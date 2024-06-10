@@ -45,9 +45,9 @@ switch ($_POST['process']) {
             $title = $_POST['title'][$i];
             $header = $_POST['header'][$i];
             $description = $_POST['description'][$i];
+            // var_dump($_POST['description'][$i]);
             $url = $_POST['url'][$i];
             $keywords = explode(",", $_POST['keywords'][$i]);
-
             $pdo = new PDO($_ENV['mysql_dsn'], $_ENV['mysql_username'], $_ENV['mysql_password']);
             $posterId = CreatePoster($pdo, $header, $title, $description, $url);
             AddKeywords($pdo, $posterId, $keywords);
