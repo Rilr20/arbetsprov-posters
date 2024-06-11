@@ -4,7 +4,7 @@
 
 ```sh
 composer install
-import poster.sql to mysql
+import db/poster.sql to mysql
 ```
 
 ## Tid
